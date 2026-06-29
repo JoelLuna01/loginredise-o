@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MIA</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="background" aria-hidden="true">
+      <div class="gradient-orb gradient-orb-blue"></div>
+      <div class="gradient-orb gradient-orb-green"></div>
+      <div class="tech-grid"></div>
+      <svg class="hexagon hexagon-top" viewBox="0 0 100 100">
+        <path d="M50 5 L93 30 V75 L50 100 L7 75 V30 Z" />
+      </svg>
+      <svg class="hexagon hexagon-bottom" viewBox="0 0 100 100">
+        <path d="M50 5 L93 30 V75 L50 100 L7 75 V30 Z" />
+      </svg>
+      <div id="particles" class="particles"></div>
+    </div>
+
+    <!-- Overlay de transición al portal -->
+    <div id="portalOverlay" class="portal-overlay" aria-hidden="true"></div>
+
+    <div class="kiosk-shell">
+      <header class="topbar">
+        <div class="brand-area">
+          <div class="logo-box">
+            <img
+              id="companyLogo"
+              class="company-logo"
+              src="./src/img/logo.jpeg"
+              alt="Embotelladora Aga S.A. de C.V."
+            />
+            <svg
+              id="logoFallback"
+              class="company-logo fallback-logo"
+              viewBox="0 0 220 120"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-label="Embotelladora Aga S.A. de C.V."
+            >
+              <path
+                d="M60 28 C60 28 85 10 130 16 C165 21 185 45 185 45"
+                stroke="#F4C430"
+                stroke-width="8"
+                stroke-linecap="round"
+              />
+              <text
+                x="110"
+                y="26"
+                text-anchor="middle"
+                font-size="18"
+                font-weight="800"
+                fill="#F4C430"
+                font-family="Segoe UI, Inter, sans-serif"
+              >
+                Embotelladora
+              </text>
+              <text
+                x="105"
+                y="85"
+                text-anchor="middle"
+                font-size="72"
+                font-weight="900"
+                fill="#3B1F6A"
+                font-family="Segoe UI, Inter, sans-serif"
+              >
+                aga
+              </text>
+              <text
+                x="188"
+                y="92"
+                text-anchor="end"
+                font-size="13"
+                font-weight="700"
+                fill="#F4C430"
+                font-family="Segoe UI, Inter, sans-serif"
+              >
+                S.A. de C.V.
+              </text>
+            </svg>
+          </div>
+          <div class="brand-divider"></div>
+          <div class="system-name">
+            <strong>MIA</strong>
+            <span>Modulo de Información Aga</span>
+          </div>
+        </div>
+
+        <div class="top-status">
+          <div id="faceStatusBadge" class="face-status">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 3H6a3 3 0 0 0-3 3v3" />
+              <path d="M15 3h3a3 3 0 0 1 3 3v3" />
+              <path d="M9 21H6a3 3 0 0 1-3-3v-3" />
+              <path d="M15 21h3a3 3 0 0 0 3-3v-3" />
+              <path d="M9 10h.01" />
+              <path d="M15 10h.01" />
+              <path d="M9 15c1.5 1 4.5 1 6 0" />
+            </svg>
+            <span id="faceStatusLabel">En espera</span>
+          </div>
+          <div class="datetime">
+            <strong id="clock">--:--</strong>
+            <span id="date">Cargando fecha</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-layout">
+        <section class="scanner-section" aria-live="polite">
+          <div id="scanner" class="scanner scanner-idle">
+            <span class="pulse-ring pulse-ring-one"></span>
+            <span class="pulse-ring pulse-ring-two"></span>
+
+            <div class="scanner-circle">
+              <div class="rotating-ring">
+                <svg viewBox="0 0 100 100" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="scanGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#0B5CAD" stop-opacity="0" />
+                      <stop offset="50%" stop-color="#1E88E5" />
+                      <stop offset="100%" stop-color="#0B5CAD" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="48"
+                    fill="none"
+                    stroke="url(#scanGradient)"
+                    stroke-width="3"
+                    stroke-dasharray="80 220"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </div>
+              <div class="scan-line"></div>
+              <div class="scanner-content">
+                <!-- Botón de inicio (estado idle / failed) -->
+                <button id="startBtn" class="start-btn" type="button" aria-label="Iniciar reconocimiento facial">
+                  <div class="start-btn-glow"></div>
+                  <div class="start-btn-inner">
+                    <svg class="start-btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 7V5a2 2 0 0 1 2-2h2" />
+                      <path d="M17 3h2a2 2 0 0 1 2 2v2" />
+                      <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
+                      <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                      <path d="M9 9h.01" />
+                      <path d="M15 9h.01" />
+                      <path d="M9.5 14a3.5 3.5 0 0 0 5 0" />
+                    </svg>
+                    <span>Iniciar reconocimiento</span>
+                  </div>
+                </button>
+
+                <!-- Silueta de persona (estado scanning) -->
+                <div id="personIcon" class="person-icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 21a8 8 0 0 0-16 0" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </div>
+
+                <!-- Check de éxito (estado detected / success) -->
+                <div id="checkIcon" class="check-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M20 6 9 17l-5-5" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <span class="reticle reticle-top-left"></span>
+            <span class="reticle reticle-top-right"></span>
+            <span class="reticle reticle-bottom-left"></span>
+            <span class="reticle reticle-bottom-right"></span>
+          </div>
+
+          <div class="scanner-copy">
+            <!-- Estado idle: pantalla de inicio -->
+            <div id="idleText" class="state-copy is-visible">
+              <h1>Bienvenido</h1>
+              <p>Presiona el botón para identificarte.</p>
+            </div>
+
+            <!-- Estado scanning: buscando rostro -->
+            <div id="scanningText" class="state-copy">
+              <h1>Buscando rostro…</h1>
+              <p>Colócate frente a la cámara.</p>
+            </div>
+
+            <!-- Estado detected: rostro encontrado -->
+            <div id="detectedText" class="state-copy">
+              <p class="identified">✔ Rostro identificado</p>
+              <h1>Bienvenido</h1>
+              <strong id="employeeName">Juan Pérez</strong>
+              <span>Ingresando…</span>
+              <div class="progress-track" aria-label="Progreso de acceso">
+                <div id="progressBar" class="progress-bar"></div>
+              </div>
+            </div>
+
+            <!-- Estado success: acceso concedido -->
+            <div id="successText" class="state-copy">
+              <h1>Acceso concedido</h1>
+              <p>Abriendo portal…</p>
+            </div>
+
+            <!-- Estado failed: no se identificó -->
+            <div id="failedText" class="state-copy">
+              <h1 class="failed-title">No fue posible identificarte</h1>
+              <p>Presiona nuevamente para reintentar.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="services-panel" aria-label="Vista previa de servicios disponibles">
+          <h2>¿Qué puedes consultar?</h2>
+          <div class="services-grid">
+            <article class="service-item">
+              <span>👤</span>
+              <p>Datos personales</p>
+            </article>
+            <article class="service-item">
+              <span>📅</span>
+              <p>Asistencia</p>
+            </article>
+            <article class="service-item">
+              <span>$</span>
+              <p>Recibos de nómina</p>
+            </article>
+            
+            
+            <article class="service-item">
+              <span>☀</span>
+              <p>Vacaciones</p>
+            </article>
+            
+            <article class="service-item">
+              <span>$</span>
+              <p>Prima Vacacional</p>
+            </article>
+            <article class="service-item">
+              <span>📚</span>
+              <p>Cursos</p>
+            </article>
+            
+          </div>
+          <p class="panel-note">
+            Vista previa del portal disponible después del reconocimiento facial.
+          </p>
+        </aside>
+      </main>
+
+     <footer class="statusbar">
+        <div class="status-group">
+          <div class="status-item">
+            <span class="status-dot"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+              <circle cx="12" cy="13" r="3" />
+            </svg>
+            <span>Checador encontrado:</span>
+            <span id="scannerName">CL3570250833</span>
+          </div>
+          
+          <div class="sync-item">Última sincronización: hace 3 minutos</div>
+        </div>
+        <div class="version">Versión del sistema v2.0</div>
+      </footer>
+    </div>
+
+    <script src="./src/app.js" defer></script>
+  </body>
+</html>
