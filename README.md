@@ -1,6 +1,6 @@
-# MIA - Kiosco de Recursos Humanos Aga
+# MIA - Modulo de información.
 
-Front-end estático para el kiosco corporativo de Recursos Humanos de Embotelladora Aga.
+Front-end estático.
 
 Esta versión no usa React ni componentes de backend. Solo contiene:
 
@@ -35,7 +35,7 @@ Después abre:
 http://localhost:8080
 ```
 
-## Logo de Aga
+## Logo 
 
 Crea la carpeta si no existe:
 
